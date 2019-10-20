@@ -1,0 +1,7 @@
+.footer__container{
+    position: absolute;
+    bottom: 0;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
