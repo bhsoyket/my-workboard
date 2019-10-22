@@ -1,6 +1,8 @@
 import React from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import ListItemText from "@material-ui/core/ListItemText";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import DashboardIcon from "@material-ui/icons/Dashboard";
@@ -96,9 +98,18 @@ function MyDrawer({ handleDrawerOpen, open }) {
         <List>
           <ListItem button>
             <ListItemIcon>
-              <DashboardIcon />
+              <PlaylistAddIcon />
             </ListItemIcon>
-            <ListItemText primary="Profiles" />
+            <ListItemText primary="Add Task" />
+          </ListItem>
+        </List>
+        <Divider />
+        <List>
+          <ListItem button>
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
           </ListItem>
         </List>
       </Drawer>

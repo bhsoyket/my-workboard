@@ -1,6 +1,5 @@
 import React from "react";
 import "./header.css";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import MenuIcon from "@material-ui/icons/Menu";
 import {
   AppBar,

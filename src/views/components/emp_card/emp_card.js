@@ -27,26 +27,28 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function EmpCard() {
+function EmpCard({employee, handleClickOpen}) {
   const classes = useStyles();
   return (
     <Grid item xs={4}>
-      <Card className={classes.card}>
-        <div className={classes.details}>
-          <CardContent className={classes.content}>
-            <Typography component="h5" variant="h5">
-              Belayet Hossain
-            </Typography>
-            <Typography variant="subtitle1" color="textSecondary">
-              Software Developer
-            </Typography>
-          </CardContent>
-        </div>
+      <Card className={classes.card} onClick={(e)=>{
+        handleClickOpen(employee.user.id)
+      }} >
         <CardMedia
           className={classes.cover}
           image="https://picsum.photos/200/300"
           title="Live from space album cover"
         />
+        <div className={classes.details}>
+          <CardContent className={classes.content}>
+            <Typography component="h5" variant="h5">
+              {employee.user.name}
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              {employee.user.designation}
+            </Typography>
+          </CardContent>
+        </div>
       </Card>
     </Grid>
   );
