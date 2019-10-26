@@ -4,6 +4,8 @@ import "./App.css";
 import Header from "./views/components/header";
 import MyDrawer from "./views/components/drawer";
 import Content from "./views/components/content";
+import AddTask from "./views/components/add_task";
+import Login from "./views/components/login.js";
 import Footer from "./views/components/footer";
 import { CssBaseline } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -83,7 +85,7 @@ function App() {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          <Content employees={empState} />
+          {/* <Content employees={empState} />
           <CSVLink
             data={workData}
             headers={headers}
@@ -93,7 +95,8 @@ function App() {
           >
             Download me
             <GetAppSharpIcon />
-          </CSVLink>
+          </CSVLink> */}
+          <Login />
         </Container>
       </main>
       <Footer />
