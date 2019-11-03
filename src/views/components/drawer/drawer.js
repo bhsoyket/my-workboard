@@ -1,11 +1,12 @@
 import React from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import ListItemText from "@material-ui/core/ListItemText";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import DashboardIcon from "@material-ui/icons/Dashboard";
+import { auth } from "../../../firebase/my-firebase";
 import clsx from "clsx";
 import {
   Drawer,
@@ -15,11 +16,12 @@ import {
   makeStyles
 } from "@material-ui/core";
 import "./drawer.css";
+import { withRouter } from "react-router-dom";
+// import { auth } from "firebase";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
-  
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
@@ -68,7 +70,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function MyDrawer({ handleDrawerOpen, open }) {
+function MyDrawer({ handleDrawerOpen, open, history }) {
   const classes = useStyles();
 
   return (
@@ -87,7 +89,12 @@ function MyDrawer({ handleDrawerOpen, open }) {
         </div>
         <Divider />
         <List>
-          <ListItem button>
+          <ListItem
+            button
+            onClick={() => {
+              history.push("/");
+            }}
+          >
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
@@ -96,7 +103,12 @@ function MyDrawer({ handleDrawerOpen, open }) {
         </List>
         <Divider />
         <List>
-          <ListItem button>
+          <ListItem
+            button
+            onClick={() => {
+              history.push("/new_task");
+            }}
+          >
             <ListItemIcon>
               <PlaylistAddIcon />
             </ListItemIcon>
@@ -105,7 +117,13 @@ function MyDrawer({ handleDrawerOpen, open }) {
         </List>
         <Divider />
         <List>
-          <ListItem button>
+          <ListItem
+            button
+            onClick={() => {
+              auth.signOut();
+              history.push("/login");
+            }}
+          >
             <ListItemIcon>
               <ExitToAppIcon />
             </ListItemIcon>
@@ -117,4 +135,4 @@ function MyDrawer({ handleDrawerOpen, open }) {
   );
 }
 
-export default MyDrawer;
+export default withRouter(MyDrawer);

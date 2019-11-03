@@ -1,5 +1,6 @@
 import React from "react";
 import "./header.css";
+import { Link } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
 import {
   AppBar,
@@ -9,7 +10,7 @@ import {
   Button,
   makeStyles
 } from "@material-ui/core";
-
+import { withRouter } from "react-router-dom";
 import clsx from "clsx";
 
 const drawerWidth = 240;
@@ -51,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Header({ handleDrawerOpen, open }) {
+function Header({ handleDrawerOpen, open, history }) {
   const classes = useStyles();
   return (
     <div className="header__container">
@@ -79,22 +80,22 @@ function Header({ handleDrawerOpen, open }) {
             noWrap
             className={classes.title}
           >
-            Dashboard
+            <Link className="header_link" to="/">Dashboard</Link>
           </Typography>
-          <IconButton color="inherit">
             <Button
               variant="outlined"
-              href="#outlined-buttons"
               color="inherit"
               className={classes.button}
+              onClick={() => {
+                history.push("/login")
+              }}
             >
-              LogIn
+              Login
             </Button>
-          </IconButton>
         </Toolbar>
       </AppBar>
     </div>
   );
 }
 
-export default Header;
+export default withRouter(Header);

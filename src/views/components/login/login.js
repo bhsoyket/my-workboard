@@ -1,18 +1,12 @@
 import React from "react";
-import axios from "axios";
-import {
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Button
-} from "@material-ui/core";
-import DateFnsUtils from "@date-io/date-fns";
+import { Link } from "react-router-dom";
+import { TextField, Button } from "@material-ui/core";
+import { auth } from "../../../firebase/my-firebase";
 import "./login.css";
-import moment from "moment";
 
 function AddTask() {
   const [values, setValues] = React.useState({
-    phone: "",
+    email: "",
     password: ""
   });
 
@@ -20,23 +14,24 @@ function AddTask() {
     setValues({ ...values, [name]: value });
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = async e => {
     e.preventDefault();
-    
-    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // ...
-    });
+    if (values) {
+      auth
+        .signInWithEmailAndPassword(values.email, values.password)
+        .catch(error => {
+          alert(error.message);
+        });
+    }
   };
-  // console.log(values);
+
   return (
     <div className="add-task__container">
       <h1>Login</h1>
       <form className="form__container" noValidate autoComplete="off">
         <TextField
-          id="standard-textarea"
+          id="email"
+          name="email"
           label="Email"
           placeholder="Please Input Your Email"
           className="form-item note-input"
@@ -47,9 +42,10 @@ function AddTask() {
           }}
         />
         <TextField
-          id="standard-textarea"
+          id="password"
+          name="password"
           label="Password"
-          type='password'
+          type="password"
           placeholder="Please Input Password"
           className="form-item note-input"
           variant="filled"
@@ -57,10 +53,21 @@ function AddTask() {
             handleChange("password", e.target.value);
           }}
         />
-        <Button variant="contained" color="primary"  className="form-button" onClick={handleLogin}>
+        <Button
+          variant="contained"
+          color="primary"
+          className="form-button"
+          onClick={handleLogin}
+        >
           Login
         </Button>
       </form>
+      Or
+      <h3>
+        <Link className="link" to="/register">
+          Register Now!
+        </Link>
+      </h3>
     </div>
   );
 }

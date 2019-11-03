@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   TextField,
@@ -14,38 +14,49 @@ import {
 import "./add_task.css";
 import moment from "moment";
 
-function AddTask() {
-  const [values, setValues] = React.useState({
+function AddTask({currentUser}) {
+  const [values, setValues] = useState({
     note: "",
     inprogress: false,
     start_time: moment().format("hh:mm: a"),
     end_time: moment().format("hh:mm: a"),
-    tomorrowWork: '',
-    challenges: '',
-    reportedAt: moment().format()
+    tomorrowWork: "",
+    challenges: ""
   });
 
   const handleChange = (name, value) => {
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    
+    const workData = {
+      todayWork: 
+        {
+          note: values.note,
+          inProgress: values.inprogress,
+          startTime: `${values.start_time}`,
+          endTime: `${values.end_time}`
+        }
+      ,
+      tomorrowWork: "",
+      challenges: ""
+    }
+
     await axios({
-      method: 'POST',
+      method: "POST",
       url: `/works`,
-      baseURL: `http://192.168.1.5:7000`,
-      data: values,
-      headers: {'authorization': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGIzY2YzZTMwYzk1OTAwMTJmZWVmMjciLCJwaG9uZSI6IjE4Mjc0NTM5MDYiLCJyb2xlIjoibWFuYWdlbWVudCIsInR0bCI6MTgwMDAwMCwiaWF0IjoxNTcyMDY1MzM4fQ.I9LPCud5s2dOVGnfeqcXLlxHgWxwkJFaX5JwYsAWPceHCY2WG0_8-JwPt_jkdmJnUk6lUkkvbsaDkbwLPQsAc5y438_yH54gn0SMP9ToR8b9zdGX8vswMFGJRMxEuBQ1DW-fJt6rv5bKOoO2HlsXY2EKwjQHrtKXzJcdMt5FNt_6TkDynQI0aOl4x--ugTZOb7YBkALTnkVBhY5n6vbwa85S7fy1aRdnFcZvgIXYJm_sikVaIvUrqFr3q-86guwFikThuQehG5GFTnVdVedMpVy_jPux-zix6kq9KG02TKJIJT0aKmH3U_jHDiYZGfpsHR3mw7xX18lMVto3doDOdA'}
-    })
-    .then( (resData) => {
+      baseURL: `http://192.168.1.9:7000`,
+      data: {user:currentUser, ...workData},
+      headers: {
+        authorization:
+          "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGIzY2YzZTMwYzk1OTAwMTJmZWVmMjciLCJwaG9uZSI6IjE4Mjc0NTM5MDYiLCJyb2xlIjoibWFuYWdlbWVudCIsInR0bCI6MTgwMDAwMCwiaWF0IjoxNTcyMDY1MzM4fQ.I9LPCud5s2dOVGnfeqcXLlxHgWxwkJFaX5JwYsAWPceHCY2WG0_8-JwPt_jkdmJnUk6lUkkvbsaDkbwLPQsAc5y438_yH54gn0SMP9ToR8b9zdGX8vswMFGJRMxEuBQ1DW-fJt6rv5bKOoO2HlsXY2EKwjQHrtKXzJcdMt5FNt_6TkDynQI0aOl4x--ugTZOb7YBkALTnkVBhY5n6vbwa85S7fy1aRdnFcZvgIXYJm_sikVaIvUrqFr3q-86guwFikThuQehG5GFTnVdVedMpVy_jPux-zix6kq9KG02TKJIJT0aKmH3U_jHDiYZGfpsHR3mw7xX18lMVto3doDOdA"
+      }
+    }).then(resData => {
       console.log(resData.data);
-      
-      // response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
     });
   };
-  // console.log(values);
+
   return (
     <div className="add-task__container">
       <h2>Create a new task</h2>
@@ -128,7 +139,12 @@ function AddTask() {
             handleChange("challenges", e.target.value);
           }}
         />
-        <Button variant="contained" color="primary"  className="form-button" onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          color="primary"
+          className="form-button"
+          onClick={handleSubmit}
+        >
           Submit
         </Button>
       </form>

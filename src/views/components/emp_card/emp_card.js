@@ -1,5 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { withRouter } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -11,7 +12,8 @@ import {
 const useStyles = makeStyles(() => ({
   card: {
     display: "flex",
-    width: "400px"
+    width: "400px",
+    height: "120px"
   },
   details: {
     display: "flex",
@@ -27,13 +29,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function EmpCard({employee, handleClickOpen}) {
+function EmpCard({ employee, history }) {
   const classes = useStyles();
   return (
     <Grid item xs={4}>
-      <Card className={classes.card} onClick={(e)=>{
-        handleClickOpen(employee.user.id)
-      }} >
+      <Card className={classes.card} onClick={() => {history.push(`/emp_details/${employee.id}`)}}>
         <CardMedia
           className={classes.cover}
           image="https://picsum.photos/200/300"
@@ -42,10 +42,10 @@ function EmpCard({employee, handleClickOpen}) {
         <div className={classes.details}>
           <CardContent className={classes.content}>
             <Typography component="h5" variant="h5">
-              {employee.user.name}
+              {employee.name}
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
-              {employee.user.designation}
+              {employee.designation}
             </Typography>
           </CardContent>
         </div>
@@ -54,4 +54,4 @@ function EmpCard({employee, handleClickOpen}) {
   );
 }
 
-export default EmpCard;
+export default withRouter(EmpCard);
