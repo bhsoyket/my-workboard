@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./emp_details.css";
-import { useParams } from "react-router-dom";
-import { TextField, TableHead } from "@material-ui/core";
+import { useParams, withRouter } from "react-router-dom";
+import {
+  Table,
+  TextField,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TablePagination
+} from "@material-ui/core";
 import moment from "moment";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
-import FirstPageIcon from "@material-ui/icons/FirstPage";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import LastPageIcon from "@material-ui/icons/LastPage";
+import {
+  LastPage as LastPageIcon,
+  FirstPage as FirstPageIcon,
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+  Edit as EditIcon
+} from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -98,7 +104,7 @@ function TablePaginationActions(props) {
   );
 }
 
-function EmpDetails() {
+function EmpDetails({history}) {
   const [selectDate, setselectDate] = useState(moment().format("YYYY-MM-DD"));
   const classes = useStyles();
   const handleChange = value => {
@@ -169,6 +175,7 @@ function EmpDetails() {
                   Start Time
                 </TableCell>
                 <TableCell className={classes.tableHeader}>End Time</TableCell>
+                <TableCell className={classes.tableHeader}>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -184,6 +191,14 @@ function EmpDetails() {
                     </TableCell>
                     <TableCell>{work.todayWork.startTime}</TableCell>
                     <TableCell>{work.todayWork.endTime}</TableCell>
+                    <TableCell>
+                      <EditIcon
+                        onClick={() => {
+                          const editWork = JSON.stringify(work);                          
+                          history.push(`/edit_work/${editWork}`);
+                        }}
+                      />
+                    </TableCell>
                   </TableRow>
                 ))}
 
@@ -223,4 +238,4 @@ function EmpDetails() {
   );
 }
 
-export default EmpDetails;
+export default withRouter(EmpDetails);

@@ -32,7 +32,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-
 function App() {
   const classes = useStyles();
   const [drawerState, setDrawerState] = useState(false);
@@ -70,13 +69,12 @@ function App() {
         return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       })
       .then(users => {
-        setEmpState(users)
+        setEmpState(users);
       })
       .catch(function(error) {
         console.error("Error adding document: ", error);
       });
   };
-  
 
   useEffect(() => {
     userData();
@@ -133,8 +131,19 @@ function App() {
               <PrivateRoute exact path="/new_task" currentUser={currentUser}>
                 <AddTask currentUser={currentUser} />
               </PrivateRoute>
-              <PrivateRoute exact path="/emp_details/:id" currentUser={currentUser}>
+              <PrivateRoute
+                exact
+                path="/emp_details/:id"
+                currentUser={currentUser}
+              >
                 <EmpDetails />
+              </PrivateRoute>
+              <PrivateRoute
+                exact
+                path="/edit_work/:work"
+                currentUser={currentUser}
+              >
+                <AddTask currentUser={currentUser} />
               </PrivateRoute>
               <PrivateRoute exact path="/" currentUser={currentUser}>
                 <Home employees={empState} />

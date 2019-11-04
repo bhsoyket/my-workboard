@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   TextField,
@@ -13,8 +13,11 @@ import {
 } from "@material-ui/pickers";
 import "./add_task.css";
 import moment from "moment";
+import { useParams, withRouter } from "react-router-dom";
 
-function AddTask({currentUser}) {
+function AddTask({ currentUser }) {
+  const { work, userId } = useParams();
+  const [editWork, setEditWork] = useState(JSON.parse(work));
   const [values, setValues] = useState({
     note: "",
     inprogress: false,
@@ -23,6 +26,16 @@ function AddTask({currentUser}) {
     tomorrowWork: "",
     challenges: ""
   });
+  const workData = {
+    todayWork: {
+      note: values.note,
+      inProgress: values.inprogress,
+      startTime: `${values.start_time}`,
+      endTime: `${values.end_time}`
+    },
+    tomorrowWork: values.tomorrowWork,
+    challenges: values.challenges
+  };
 
   const handleChange = (name, value) => {
     setValues({ ...values, [name]: value });
@@ -30,24 +43,12 @@ function AddTask({currentUser}) {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const workData = {
-      todayWork: 
-        {
-          note: values.note,
-          inProgress: values.inprogress,
-          startTime: `${values.start_time}`,
-          endTime: `${values.end_time}`
-        }
-      ,
-      tomorrowWork: "",
-      challenges: ""
-    }
 
     await axios({
       method: "POST",
       url: `/works`,
       baseURL: `http://192.168.1.9:7000`,
-      data: {user:currentUser, ...workData},
+      data: { user: currentUser, ...workData },
       headers: {
         authorization:
           "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGIzY2YzZTMwYzk1OTAwMTJmZWVmMjciLCJwaG9uZSI6IjE4Mjc0NTM5MDYiLCJyb2xlIjoibWFuYWdlbWVudCIsInR0bCI6MTgwMDAwMCwiaWF0IjoxNTcyMDY1MzM4fQ.I9LPCud5s2dOVGnfeqcXLlxHgWxwkJFaX5JwYsAWPceHCY2WG0_8-JwPt_jkdmJnUk6lUkkvbsaDkbwLPQsAc5y438_yH54gn0SMP9ToR8b9zdGX8vswMFGJRMxEuBQ1DW-fJt6rv5bKOoO2HlsXY2EKwjQHrtKXzJcdMt5FNt_6TkDynQI0aOl4x--ugTZOb7YBkALTnkVBhY5n6vbwa85S7fy1aRdnFcZvgIXYJm_sikVaIvUrqFr3q-86guwFikThuQehG5GFTnVdVedMpVy_jPux-zix6kq9KG02TKJIJT0aKmH3U_jHDiYZGfpsHR3mw7xX18lMVto3doDOdA"
@@ -57,8 +58,62 @@ function AddTask({currentUser}) {
     });
   };
 
+  const handleUpdate = async e => { 
+    e.preventDefault();
+
+    await axios({
+      method: "PUT",
+      url: `/works/${editWork._id}/${currentUser.id}`,
+      baseURL: `http://192.168.1.9:7000`,
+      data: { user: currentUser, ...workData },
+      headers: {
+        authorization:
+          "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGIzY2YzZTMwYzk1OTAwMTJmZWVmMjciLCJwaG9uZSI6IjE4Mjc0NTM5MDYiLCJyb2xlIjoibWFuYWdlbWVudCIsInR0bCI6MTgwMDAwMCwiaWF0IjoxNTcyMDY1MzM4fQ.I9LPCud5s2dOVGnfeqcXLlxHgWxwkJFaX5JwYsAWPceHCY2WG0_8-JwPt_jkdmJnUk6lUkkvbsaDkbwLPQsAc5y438_yH54gn0SMP9ToR8b9zdGX8vswMFGJRMxEuBQ1DW-fJt6rv5bKOoO2HlsXY2EKwjQHrtKXzJcdMt5FNt_6TkDynQI0aOl4x--ugTZOb7YBkALTnkVBhY5n6vbwa85S7fy1aRdnFcZvgIXYJm_sikVaIvUrqFr3q-86guwFikThuQehG5GFTnVdVedMpVy_jPux-zix6kq9KG02TKJIJT0aKmH3U_jHDiYZGfpsHR3mw7xX18lMVto3doDOdA"
+      }
+    }).then(resData => {
+      console.log(resData.data);
+    });
+  };
+
+  useEffect(() => {
+    console.log("currentUser", currentUser);
+    if (editWork) {
+      setValues({
+        note: editWork.todayWork.note,
+        inprogress: editWork.todayWork.inProgress,
+        start_time: editWork.todayWork.startTime,
+        end_time: editWork.todayWork.endTime,
+        tomorrowWork: editWork.tomorrowWork,
+        challenges: editWork.challenges
+      });
+    }
+  }, [work]);
+
+  let button;
+
+  if (!work) {
+    button = <Button
+    variant="contained"
+    color="primary"
+    className="form-button"
+    onClick={handleSubmit}
+  >
+    Submit
+  </Button>;
+  } else {
+    button = <Button
+    variant="contained"
+    color="primary"
+    className="form-button"
+    onClick={handleUpdate}
+  >
+    Update
+  </Button>;
+  }
+
   return (
     <div className="add-task__container">
+      {console.log("currentUser", currentUser)}
       <h2>Create a new task</h2>
       <form className="form__container" noValidate autoComplete="off">
         <TextField
@@ -70,6 +125,7 @@ function AddTask({currentUser}) {
           margin="normal"
           rows="3"
           variant="filled"
+          value={values.note}
           onChange={e => {
             handleChange("note", e.target.value);
           }}
@@ -82,7 +138,7 @@ function AddTask({currentUser}) {
               onChange={e => {
                 handleChange("inprogress", e.target.checked);
               }}
-              value="inprogress"
+              value={values.inprogress}
             />
           }
           label="In Progress"
@@ -123,6 +179,7 @@ function AddTask({currentUser}) {
           className="form-item note-input"
           variant="filled"
           rows="2"
+          value={values.tomorrowWork}
           onChange={e => {
             handleChange("tomorrowWork", e.target.value);
           }}
@@ -135,18 +192,12 @@ function AddTask({currentUser}) {
           className="form-item note-input"
           variant="filled"
           rows="2"
+          value={values.challenges}
           onChange={e => {
             handleChange("challenges", e.target.value);
           }}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          className="form-button"
-          onClick={handleSubmit}
-        >
-          Submit
-        </Button>
+        {button}
       </form>
     </div>
   );
