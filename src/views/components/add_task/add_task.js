@@ -17,7 +17,7 @@ import { useParams } from "react-router-dom";
 
 function AddTask({ currentUser }) {
   const { work } = useParams();
-  const [editWork] = useState(work === undefined? "" : JSON.parse(work));
+  const [editWork] = useState(work ? JSON.parse(work) : "");
   const [values, setValues] = useState({
     note: "",
     inprogress: false,
@@ -47,7 +47,7 @@ function AddTask({ currentUser }) {
     await axios({
       method: "POST",
       url: `/works`,
-      baseURL: `http://192.168.1.9:7000`,
+      baseURL: `http://192.168.1.5:7000`,
       data: { user: currentUser, ...workData },
       headers: {
         authorization:
@@ -58,13 +58,13 @@ function AddTask({ currentUser }) {
     });
   };
 
-  const handleUpdate = async e => { 
+  const handleUpdate = async e => {
     e.preventDefault();
 
     await axios({
       method: "PUT",
       url: `/works/${editWork._id}/${currentUser.id}`,
-      baseURL: `http://192.168.1.9:7000`,
+      baseURL: `http://192.168.1.5:7000`,
       data: { user: currentUser, ...workData },
       headers: {
         authorization:
@@ -76,7 +76,6 @@ function AddTask({ currentUser }) {
   };
 
   useEffect(() => {
-    console.log("currentUser", currentUser);
     if (editWork) {
       setValues({
         note: editWork.todayWork.note,
@@ -87,34 +86,11 @@ function AddTask({ currentUser }) {
         challenges: editWork.challenges
       });
     }
-  }, [work]);
-
-  let button;
-
-  if (!work) {
-    button = <Button
-    variant="contained"
-    color="primary"
-    className="form-button"
-    onClick={handleSubmit}
-  >
-    Submit
-  </Button>;
-  } else {
-    button = <Button
-    variant="contained"
-    color="primary"
-    className="form-button"
-    onClick={handleUpdate}
-  >
-    Update
-  </Button>;
-  }
+  }, [editWork]);
 
   return (
     <div className="add-task__container">
-      {console.log("currentUser", currentUser)}
-      <h2>Create a new task</h2>
+      {work ? <h2>Edit Task</h2> : <h2>Create a new task</h2>}
       <form className="form__container" noValidate autoComplete="off">
         <TextField
           id="standard-textarea"
@@ -197,7 +173,14 @@ function AddTask({ currentUser }) {
             handleChange("challenges", e.target.value);
           }}
         />
-        {button}
+        <Button
+          variant="contained"
+          color="primary"
+          className="form-button"
+          onClick={work ? handleUpdate : handleSubmit}
+        >
+          {work ? "Update" : "Submit"}
+        </Button>
       </form>
     </div>
   );

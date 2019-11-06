@@ -4,7 +4,6 @@ import "./App.css";
 import Header from "./views/components/header";
 import MyDrawer from "./views/components/drawer";
 import Login from "./views/components/login";
-import AddTask from "./views/components/add_task";
 import Register from "./views/components/register";
 import PrivateRoute from "./views/components/private_route";
 import Footer from "./views/components/footer";
@@ -13,6 +12,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Home from "./views/pages/home";
 import EmpDetails from "./views/pages/emp_details";
+import NewTask from "./views/pages/new_task";
+import EditTask from "./views/pages/edit_task";
 import { Redirect } from "react-router-dom";
 import { auth, firestore, createUserDocument } from "./firebase/my-firebase"; // for firebae
 
@@ -129,7 +130,7 @@ function App() {
               />
 
               <PrivateRoute exact path="/new_task" currentUser={currentUser}>
-                <AddTask currentUser={currentUser} />
+                <NewTask currentUser={currentUser} />
               </PrivateRoute>
               <PrivateRoute
                 exact
@@ -143,7 +144,7 @@ function App() {
                 path="/edit_work/:work"
                 currentUser={currentUser}
               >
-                <AddTask currentUser={currentUser} />
+                <EditTask currentUser={currentUser} />
               </PrivateRoute>
               <PrivateRoute exact path="/" currentUser={currentUser}>
                 <Home employees={empState} />

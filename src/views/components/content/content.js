@@ -4,12 +4,6 @@ import { Grid } from "@material-ui/core";
 import "./content.css";
 
 function Content({ employees }) {
-  const [selectEmp, setSelectEmp] = React.useState({});
-
-  const handleClickOpen = (id) => {
-    setSelectEmp(employees.find(emp => emp.id === id))
-  };
-
   return (
     <div className="content__container">
       <Grid container spacing={3}>
