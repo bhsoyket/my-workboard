@@ -3,3 +3,10 @@
     text-decoration: none;
     color: #ffffff;
 }
+
+.userIcon {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    font-size: 20px;
+}

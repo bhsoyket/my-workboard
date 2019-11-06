@@ -13,11 +13,11 @@ import {
 } from "@material-ui/pickers";
 import "./add_task.css";
 import moment from "moment";
-import { useParams, withRouter } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function AddTask({ currentUser }) {
-  const { work, userId } = useParams();
-  const [editWork, setEditWork] = useState(JSON.parse(work));
+  const { work } = useParams();
+  const [editWork] = useState(work === undefined? "" : JSON.parse(work));
   const [values, setValues] = useState({
     note: "",
     inprogress: false,

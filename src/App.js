@@ -104,7 +104,7 @@ function App() {
     <Router>
       <div className={classes.root}>
         <CssBaseline />
-        <Header open={drawerState} handleDrawerOpen={handleDrawerOpen} />
+        <Header open={drawerState} handleDrawerOpen={handleDrawerOpen} currentUser={currentUser} />
         <MyDrawer open={drawerState} handleDrawerOpen={handleDrawerOpen} />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />

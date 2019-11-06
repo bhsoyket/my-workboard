@@ -11,6 +11,7 @@ import {
   makeStyles
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import clsx from "clsx";
 
 const drawerWidth = 240;
@@ -52,10 +53,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Header({ handleDrawerOpen, open, history }) {
+function Header({ handleDrawerOpen, open, currentUser, history }) {
   const classes = useStyles();
   return (
-    <div className="header__container">
+    <div className="header__container">      
       <AppBar
         position="absolute"
         className={clsx(classes.appBar, open && classes.appBarShift)}
@@ -80,18 +81,28 @@ function Header({ handleDrawerOpen, open, history }) {
             noWrap
             className={classes.title}
           >
-            <Link className="header_link" to="/">Dashboard</Link>
+            <Link className="header_link" to="/">
+              Dashboard
+            </Link>
           </Typography>
+          {
+          currentUser ? (
+            <div className="userIcon">
+              <PersonOutlineIcon style={{marginRight:"5px"}} />
+              {currentUser.name}
+            </div>
+          ) : (
             <Button
               variant="outlined"
               color="inherit"
               className={classes.button}
               onClick={() => {
-                history.push("/login")
+                history.push("/login");
               }}
             >
               Login
             </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>
