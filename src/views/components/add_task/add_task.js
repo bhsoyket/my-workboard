@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   TextField,
   FormControlLabel,
@@ -17,7 +16,6 @@ import { useParams } from "react-router-dom";
 
 function AddTask({ currentUser, currentTask, formHandler }) {
   const { workId } = useParams();
-  // const [editWork] = useState(workId ? workId : "");
   const [values, setValues] = useState({
     note: "",
     inprogress: false,
@@ -47,10 +45,6 @@ function AddTask({ currentUser, currentTask, formHandler }) {
     formHandler({ user: currentUser, ...workData });
   };
 
-  const handleUpdate = async e => {
-    e.preventDefault();
-    formHandler({ user: currentUser, ...workData });
-  };
 
   useEffect(() => {
     if (currentTask) {

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "./emp_details.css";
 import { useParams, useHistory } from "react-router-dom";
 import {
@@ -36,6 +35,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 700
   }
 }));
+
 const useStyles1 = makeStyles(theme => ({
   root: {
     flexShrink: 0,
@@ -130,8 +130,8 @@ function EmpDetails({ tasks, setTasks }) {
   };
 
   useEffect(() => {
-  setTasks(id);
-  }, [id]);
+    setTasks(id);
+  }, [setTasks, id]);
 
   return (
     <div className={classes.root}>

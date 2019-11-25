@@ -82,7 +82,7 @@ function Header({ handleDrawerOpen, open, currentUser, history }) {
             className={classes.title}
           >
             <Link className="header_link" to="/">
-              Dashboard
+              WorkBoard
             </Link>
           </Typography>
           {

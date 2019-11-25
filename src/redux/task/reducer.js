@@ -32,15 +32,7 @@ const taskReducer = (state = getInitialState(), { type, payload }) => {
     case UPDATE_TASK:
       return {
         ...state,
-        tasks: state.tasks.map(task => {
-          if (task.id === payload.id) {
-            return {
-              ...task,
-              ...payload
-            };
-          }
-          return task;
-        })
+        tasks: [...payload]
       };
     case ALL_TASK:
       return {

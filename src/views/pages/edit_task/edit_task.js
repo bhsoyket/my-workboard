@@ -5,18 +5,20 @@ import { connect } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
 
 function EditTask({currentUser, task, getTask, setTask}) {
+    const history = useHistory();
     const { workId } = useParams();
     const handleUpdate = workData => {         
-        setTask({id: workId, ...workData});
+        setTask({id: workId, ...workData})
+        .then(() => {
+            history.push(`/today_task`)}
+        )
     };
     useEffect(() => {
         getTask(workId);
-        
-    }, [workId])
+    }, [getTask, workId])
 
     return (
         <div>
-            {/* {console.log("task", task)} */}
             <AddTask currentTask={task} currentUser={currentUser} formHandler={handleUpdate} />
         </div>
     )

@@ -14,6 +14,7 @@ import Home from "./views/pages/home";
 import EmpDetails from "./views/pages/emp_details";
 import NewTask from "./views/pages/new_task";
 import EditTask from "./views/pages/edit_task";
+import TodayTask from "./views/pages/today_tasks";
 import { Redirect } from "react-router-dom";
 import { auth, firestore, createUserDocument } from "./firebase/my-firebase"; // for firebae
 import { setCurrentUserActionCreator } from "./redux/user/actions";
@@ -116,6 +117,11 @@ function App({currentUser, setCurrentUser}) {
               <PrivateRoute exact path="/new_task" currentUser={currentUser}>
                 <NewTask currentUser={currentUser} />
               </PrivateRoute>
+
+              <PrivateRoute exact path="/today_task" currentUser={currentUser}>
+                <TodayTask currentUser={currentUser} />
+              </PrivateRoute>
+
               <PrivateRoute
                 exact
                 path="/emp_details/:id"
@@ -123,6 +129,7 @@ function App({currentUser, setCurrentUser}) {
               >
                 <EmpDetails />
               </PrivateRoute>
+
               <PrivateRoute
                 exact
                 path="/edit_work/:workId"
@@ -130,9 +137,11 @@ function App({currentUser, setCurrentUser}) {
               >
                 <EditTask currentUser={currentUser} />
               </PrivateRoute>
+
               <PrivateRoute exact path="/" currentUser={currentUser}>
                 <Home />
               </PrivateRoute>
+
             </Switch>
           </Container>
         </main>

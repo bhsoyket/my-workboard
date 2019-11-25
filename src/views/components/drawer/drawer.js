@@ -6,6 +6,7 @@ import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import ListItemText from "@material-ui/core/ListItemText";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import DashboardIcon from "@material-ui/icons/Dashboard";
+import TodayIcon from '@material-ui/icons/Today';
 import { auth } from "../../../firebase/my-firebase";
 import clsx from "clsx";
 import {
@@ -16,8 +17,7 @@ import {
   makeStyles
 } from "@material-ui/core";
 import "./drawer.css";
-import { withRouter } from "react-router-dom";
-// import { auth } from "firebase";
+import { useHistory } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -70,7 +70,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function MyDrawer({ handleDrawerOpen, open, history }) {
+function MyDrawer({ handleDrawerOpen, open }) {
+  const history = useHistory();
   const classes = useStyles();
 
   return (
@@ -99,6 +100,20 @@ function MyDrawer({ handleDrawerOpen, open, history }) {
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
+          </ListItem>
+        </List>
+        <Divider />
+        <List>
+          <ListItem
+            button
+            onClick={() => {
+              history.push("/today_task");
+            }}
+          >
+            <ListItemIcon>
+              <TodayIcon />
+            </ListItemIcon>
+            <ListItemText primary="Today's Tasks" />
           </ListItem>
         </List>
         <Divider />
@@ -135,4 +150,4 @@ function MyDrawer({ handleDrawerOpen, open, history }) {
   );
 }
 
-export default withRouter(MyDrawer);
+export default MyDrawer;

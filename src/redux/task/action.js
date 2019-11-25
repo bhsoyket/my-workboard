@@ -2,7 +2,7 @@ import {
   CREATE_TASK,
   GET_USER_TASKS,
   UPDATE_TASK,
-  ALL_TASK,
+  // ALL_TASK,
   GET_TASK
 } from "./action-types";
 import axios from "axios";
