@@ -1,10 +1,10 @@
 import React from 'react'
 import Content from "../../components/content";
 
-function Home({employees}) {
+function Home() {
     return (
         <div>
-            <Content employees={employees} />
+            <Content />
         </div>
     )
 }

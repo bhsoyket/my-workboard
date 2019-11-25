@@ -15,9 +15,9 @@ import "./add_task.css";
 import moment from "moment";
 import { useParams } from "react-router-dom";
 
-function AddTask({ currentUser }) {
-  const { work } = useParams();
-  const [editWork] = useState(work ? JSON.parse(work) : "");
+function AddTask({ currentUser, currentTask, formHandler }) {
+  const { workId } = useParams();
+  // const [editWork] = useState(workId ? workId : "");
   const [values, setValues] = useState({
     note: "",
     inprogress: false,
@@ -26,6 +26,7 @@ function AddTask({ currentUser }) {
     tomorrowWork: "",
     challenges: ""
   });
+
   const workData = {
     todayWork: {
       note: values.note,
@@ -41,56 +42,32 @@ function AddTask({ currentUser }) {
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = e => {
     e.preventDefault();
-
-    await axios({
-      method: "POST",
-      url: `/works`,
-      baseURL: `http://192.168.1.5:7000`,
-      data: { user: currentUser, ...workData },
-      headers: {
-        authorization:
-          "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGIzY2YzZTMwYzk1OTAwMTJmZWVmMjciLCJwaG9uZSI6IjE4Mjc0NTM5MDYiLCJyb2xlIjoibWFuYWdlbWVudCIsInR0bCI6MTgwMDAwMCwiaWF0IjoxNTcyMDY1MzM4fQ.I9LPCud5s2dOVGnfeqcXLlxHgWxwkJFaX5JwYsAWPceHCY2WG0_8-JwPt_jkdmJnUk6lUkkvbsaDkbwLPQsAc5y438_yH54gn0SMP9ToR8b9zdGX8vswMFGJRMxEuBQ1DW-fJt6rv5bKOoO2HlsXY2EKwjQHrtKXzJcdMt5FNt_6TkDynQI0aOl4x--ugTZOb7YBkALTnkVBhY5n6vbwa85S7fy1aRdnFcZvgIXYJm_sikVaIvUrqFr3q-86guwFikThuQehG5GFTnVdVedMpVy_jPux-zix6kq9KG02TKJIJT0aKmH3U_jHDiYZGfpsHR3mw7xX18lMVto3doDOdA"
-      }
-    }).then(resData => {
-      console.log(resData.data);
-    });
+    formHandler({ user: currentUser, ...workData });
   };
 
   const handleUpdate = async e => {
     e.preventDefault();
-
-    await axios({
-      method: "PUT",
-      url: `/works/${editWork._id}/${currentUser.id}`,
-      baseURL: `http://192.168.1.5:7000`,
-      data: { user: currentUser, ...workData },
-      headers: {
-        authorization:
-          "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGIzY2YzZTMwYzk1OTAwMTJmZWVmMjciLCJwaG9uZSI6IjE4Mjc0NTM5MDYiLCJyb2xlIjoibWFuYWdlbWVudCIsInR0bCI6MTgwMDAwMCwiaWF0IjoxNTcyMDY1MzM4fQ.I9LPCud5s2dOVGnfeqcXLlxHgWxwkJFaX5JwYsAWPceHCY2WG0_8-JwPt_jkdmJnUk6lUkkvbsaDkbwLPQsAc5y438_yH54gn0SMP9ToR8b9zdGX8vswMFGJRMxEuBQ1DW-fJt6rv5bKOoO2HlsXY2EKwjQHrtKXzJcdMt5FNt_6TkDynQI0aOl4x--ugTZOb7YBkALTnkVBhY5n6vbwa85S7fy1aRdnFcZvgIXYJm_sikVaIvUrqFr3q-86guwFikThuQehG5GFTnVdVedMpVy_jPux-zix6kq9KG02TKJIJT0aKmH3U_jHDiYZGfpsHR3mw7xX18lMVto3doDOdA"
-      }
-    }).then(resData => {
-      console.log(resData.data);
-    });
+    formHandler({ user: currentUser, ...workData });
   };
 
   useEffect(() => {
-    if (editWork) {
+    if (currentTask) {
       setValues({
-        note: editWork.todayWork.note,
-        inprogress: editWork.todayWork.inProgress,
-        start_time: editWork.todayWork.startTime,
-        end_time: editWork.todayWork.endTime,
-        tomorrowWork: editWork.tomorrowWork,
-        challenges: editWork.challenges
+        note: currentTask.todayWork.note,
+        inprogress: currentTask.todayWork.inProgress,
+        start_time: currentTask.todayWork.startTime,
+        end_time: currentTask.todayWork.endTime,
+        tomorrowWork: currentTask.tomorrowWork,
+        challenges: currentTask.challenges
       });
     }
-  }, [editWork]);
+  }, [currentTask]);
 
   return (
     <div className="add-task__container">
-      {work ? <h2>Edit Task</h2> : <h2>Create a new task</h2>}
+      {workId ? <h2>Edit Task</h2> : <h2>Create a new task</h2>}
       <form className="form__container" noValidate autoComplete="off">
         <TextField
           id="standard-textarea"
@@ -177,9 +154,9 @@ function AddTask({ currentUser }) {
           variant="contained"
           color="primary"
           className="form-button"
-          onClick={work ? handleUpdate : handleSubmit}
+          onClick={handleSubmit}
         >
-          {work ? "Update" : "Submit"}
+          {workId ? "Update" : "Submit"}
         </Button>
       </form>
     </div>

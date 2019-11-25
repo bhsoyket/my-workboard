@@ -16,6 +16,8 @@ import NewTask from "./views/pages/new_task";
 import EditTask from "./views/pages/edit_task";
 import { Redirect } from "react-router-dom";
 import { auth, firestore, createUserDocument } from "./firebase/my-firebase"; // for firebae
+import { setCurrentUserActionCreator } from "./redux/user/actions";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,11 +35,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function App() {
+function App({currentUser, setCurrentUser}) {
   const classes = useStyles();
   const [drawerState, setDrawerState] = useState(false);
-  const [currentUser, setCurrentUser] = useState({});
-  const [empState, setEmpState] = useState([]);
   const handleDrawerOpen = () => {
     setDrawerState(!drawerState);
   };
@@ -62,23 +62,7 @@ function App() {
       });
   };
 
-  const userData = () => {
-    firestore
-      .collection("users")
-      .get()
-      .then(snapshot => {
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      })
-      .then(users => {
-        setEmpState(users);
-      })
-      .catch(function(error) {
-        console.error("Error adding document: ", error);
-      });
-  };
-
   useEffect(() => {
-    userData();
     let unSubscribeFromAuth = auth.onAuthStateChanged(async authUser => {
       if (authUser) {
         firestore
@@ -141,13 +125,13 @@ function App() {
               </PrivateRoute>
               <PrivateRoute
                 exact
-                path="/edit_work/:work"
+                path="/edit_work/:workId"
                 currentUser={currentUser}
               >
                 <EditTask currentUser={currentUser} />
               </PrivateRoute>
               <PrivateRoute exact path="/" currentUser={currentUser}>
-                <Home employees={empState} />
+                <Home />
               </PrivateRoute>
             </Switch>
           </Container>
@@ -158,4 +142,17 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setCurrentUser: user => dispatch(setCurrentUserActionCreator(user))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

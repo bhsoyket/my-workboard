@@ -40,3 +40,10 @@ export const createUserDocument = async (user, additionalData) => {
   }
   return userRef;
 };
+
+export const convertCollectionSnapshotToMap = collectionSnapshot => {
+  const convertedCollections = collectionSnapshot.docs.map(doc => {
+    return { ...doc.data(), id: doc.id };
+  });
+  return convertedCollections;
+};

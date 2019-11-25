@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./emp_details.css";
-import { useParams, withRouter } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import {
   Table,
   TextField,
@@ -16,6 +16,8 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
+import { getUserTasksActionCreator } from "../../../redux/task/action";
+import { connect } from "react-redux";
 import {
   LastPage as LastPageIcon,
   FirstPage as FirstPageIcon,
@@ -104,19 +106,19 @@ function TablePaginationActions(props) {
   );
 }
 
-function EmpDetails({history}) {
+function EmpDetails({ tasks, setTasks }) {
+  const history = useHistory();
   const [selectDate, setselectDate] = useState(moment().format("YYYY-MM-DD"));
   const classes = useStyles();
   const handleChange = value => {
     setselectDate(value);
   };
-  const [worksState, setWorksState] = useState([]);
   const { id } = useParams();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, worksState.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, tasks.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -128,21 +130,7 @@ function EmpDetails({history}) {
   };
 
   useEffect(() => {
-    const works = async userId => {
-      await axios({
-        method: "GET",
-        url: `/works/users/${userId}`,
-        baseURL: `http://192.168.1.5:7000`,
-        headers: {
-          authorization:
-            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGIzY2YzZTMwYzk1OTAwMTJmZWVmMjciLCJwaG9uZSI6IjE4Mjc0NTM5MDYiLCJyb2xlIjoibWFuYWdlbWVudCIsInR0bCI6MTgwMDAwMCwiaWF0IjoxNTcyMDY1MzM4fQ.I9LPCud5s2dOVGnfeqcXLlxHgWxwkJFaX5JwYsAWPceHCY2WG0_8-JwPt_jkdmJnUk6lUkkvbsaDkbwLPQsAc5y438_yH54gn0SMP9ToR8b9zdGX8vswMFGJRMxEuBQ1DW-fJt6rv5bKOoO2HlsXY2EKwjQHrtKXzJcdMt5FNt_6TkDynQI0aOl4x--ugTZOb7YBkALTnkVBhY5n6vbwa85S7fy1aRdnFcZvgIXYJm_sikVaIvUrqFr3q-86guwFikThuQehG5GFTnVdVedMpVy_jPux-zix6kq9KG02TKJIJT0aKmH3U_jHDiYZGfpsHR3mw7xX18lMVto3doDOdA"
-        }
-      }).then(resData => {
-        console.log("on Reponse", resData.data.data);
-        setWorksState(resData.data.data);
-      });
-    };
-    works(id);
+  setTasks(id);
   }, [id]);
 
   return (
@@ -179,7 +167,7 @@ function EmpDetails({history}) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {worksState
+              {tasks
                 .filter(
                   i => moment(i.reportedAt).format("YYYY-MM-DD") === selectDate
                 )
@@ -194,8 +182,7 @@ function EmpDetails({history}) {
                     <TableCell>
                       <EditIcon
                         onClick={() => {
-                          const editWork = JSON.stringify(work);                          
-                          history.push(`/edit_work/${editWork}`);
+                          history.push(`/edit_work/${work._id}`);
                         }}
                       />
                     </TableCell>
@@ -211,10 +198,10 @@ function EmpDetails({history}) {
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, 100]}
+                  rowsPerPageOptions={[5, 10, 25]}
                   colSpan={3}
                   count={
-                    worksState.filter(
+                    tasks.filter(
                       i =>
                         moment(i.reportedAt).format("YYYY-MM-DD") === selectDate
                     ).length
@@ -238,4 +225,18 @@ function EmpDetails({history}) {
   );
 }
 
-export default withRouter(EmpDetails);
+
+const mapStateToProps = state => ({
+  tasks: state.task.tasks
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setTasks: user => dispatch(getUserTasksActionCreator(user))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EmpDetails);
